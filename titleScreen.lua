@@ -18,12 +18,14 @@ function titleScreen.update(dt)
     online = "client"
     state = "levelOne"
     client.start()
+    firstTime = 1
   end
   
   if love.keyboard.isDown("s") then
     online = "server"
     state = "levelOne"
     server.start()
+    firstTime = 1
   end
   
  -- state = "levelOne"

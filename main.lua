@@ -9,6 +9,10 @@ state = "titleScreen"
 online = ""
 msg = ""
 
+firstTime = 0
+
+players = {}
+
 function love.load(arg)
   
   if arg[#arg] == "-debug" then require("mobdebug").start() end
@@ -18,6 +22,8 @@ function love.load(arg)
   menuScreen.load(arg)
   
   levelOne.load(arg)
+  
+  
   
 end
 
@@ -38,7 +44,62 @@ function love.update(dt)
     menuScreen.update(dt)
   end
   
+  
+  
+  
+  if firstTime == 1 then
+  
   if online == "server" then
+    co = coroutine.create(function ()
+        while true do
+        print("Tried Recieving")
+    msg = server.recieveUdpMsg()
+    
+    if msg ~= nil then
+    
+    if string.sub(msg, 0, 1) == "X" then
+      
+      enemyBall.x = string.sub(msg, 3)
+      
+    else 
+      
+      enemyBall.y = string.sub(msg, 3)
+      
+    end
+    
+    print("Tried Sending")
+   -- sendUdpMsg()
+   
+   end
+    end
+   end)
+  
+end
+
+  if online == "client" then
+    co = coroutine.create(function ()
+        while true do
+        print("Tried Sending")
+         client.sendUdpMsg()
+         end
+       end)
+  end
+  
+ --` coroutine.resume(co)
+  
+  print(coroutine.status(co))
+  
+  firstTime = 2
+  
+  end
+  
+  
+  
+  
+  
+  
+  
+  --[[if online == "server" then
     print("Tried Recieving")
     msg = server.recieveUdpMsg()
     
@@ -78,7 +139,7 @@ function love.update(dt)
    -- end
    
   end
-  
+  ]]--
 end
 
 function love.draw()
